@@ -7,9 +7,12 @@ from langchain_ollama import ChatOllama
 from langchain.agents import create_agent
 from langchain.tools import tool
 from langchain_core.messages import HumanMessage
-
+from langchain_tavily import TavilySearch
+from tavily import TavilyClient
 
 load_dotenv()
+
+tavily = TavilyClient()
 
 @tool
 def search (query: str) -> str:
@@ -21,10 +24,12 @@ def search (query: str) -> str:
         The search result
     """
     print(f"searching for {query}")
-    return "Tokyo weather is rainy"
+    # return "Tokyo weather is rainy"
+    return tavily.search(query=query)
 
-llm = ChatOpenAI()
+llm = ChatOpenAI(model="gpt-5")
 tools = [search]
+# tools = [TavilySearch()]
 agent = create_agent(model=llm, tools=tools)
 
 
@@ -33,7 +38,7 @@ def main():
 
     result = agent.invoke(
         {
-            "messages":HumanMessage(content="How is the weather in Tokyo")
+            "messages":HumanMessage(content="Find me 1 job opening for senior computer vision engineer in Japan on Linkedin which doesn't need Japanese language and the company is not a startup.")
         }
     )
     pprint(result)
