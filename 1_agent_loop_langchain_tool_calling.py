@@ -33,7 +33,9 @@ def apply_discount(price: float, discount_tier: str) -> float:
 
 
 # --- Agent Loop ---
-
+@traceable(name="LangChain Agent Loop")
+def run_agent_1(question:str):
+    pass
 
 @traceable(name="LangChain Agent Loop")
 def run_agent(question: str):
@@ -41,6 +43,7 @@ def run_agent(question: str):
     tools_dict = {t.name: t for t in tools}
 
     llm = init_chat_model(f"ollama:{MODEL}", temperature=0)
+    # llm = init_chat_model(f"openai:gpt-5", temperature=0)
     llm_with_tools = llm.bind_tools(tools)
 
     print(f"Question: {question}")
